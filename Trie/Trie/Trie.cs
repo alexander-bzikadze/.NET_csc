@@ -5,8 +5,8 @@ namespace Trie
 {
     public class Trie
     {
-        /// Expected complexity: O(|element|)
-        /// Returns true if this set has not already contained the specified element
+        // Expected complexity: O(|element|)
+        // Returns true if this set has not already contained the specified element
         public bool Add(string element) 
         { 
             if (Contains(element)) 
@@ -28,7 +28,7 @@ namespace Trie
             return true;
         }
 
-        /// Expected complexity: O(|element|)
+        // Expected complexity: O(|element|)
         public bool Contains(string element) 
         { 
             var node = _root;
@@ -43,8 +43,8 @@ namespace Trie
             return node.HowManyEndHere > 0;
         }
 
-        /// Expected complexity: O(|element|)
-        /// Returns true if this set contained the specified element
+        // Expected complexity: O(|element|)
+        // Returns true if this set contained the specified element
         public bool Remove(string element)  
         {
             if (!Contains(element)) {
@@ -65,13 +65,13 @@ namespace Trie
             return true;
         }
 
-        /// Expected complexity: O(1)
+        // Expected complexity: O(1)
         public int Size()  
         { 
             return _root.HowManyPassHere;
         }
 
-        /// Expected complexity: O(|prefix|)
+        // Expected complexity: O(|prefix|)
         public int HowManyStartsWithPrefix(string prefix)  
         { 
             var node = _root;
