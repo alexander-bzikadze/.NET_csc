@@ -1,40 +1,37 @@
-using System;
 using System.Collections.Generic;
 
 namespace Trie
 {
     public class Trie
     {
-        public Trie() {}
-
         /// Expected complexity: O(|element|)
         /// Returns true if this set did not already contain the specified element
         public bool Add(string element)  { 
             if (Contains(element)) {
                 return false;
             }
-            var node = root;
+            var node = _root;
             foreach (var c in element) {
-                if (!node.Map.ContainsKey(c)) {
-                    node.Map.Add(c, new Node());
+                if (!node.DictionaryFromCharToNode.ContainsKey(c)) {
+                    node.DictionaryFromCharToNode.Add(c, new Node());
                 }
-                node.Size += 1;
-                node = node.Map[c];
+                node.Size++;
+                node = node.DictionaryFromCharToNode[c];
             }
-            node.Size += 1;
+            node.Size++;
             return true;
         }
 
         /// Expected complexity: O(|element|)
-        public bool Contains(string element)  { 
-            var node = root;
+        public bool Contains(string element) { 
+            var node = _root;
             foreach (var c in element) {
-                if (!node.Map.ContainsKey(c)) {
+                if (!node.DictionaryFromCharToNode.ContainsKey(c)) {
                     return false;
                 }
-                node = node.Map[c];
+                node = node.DictionaryFromCharToNode[c];
             }
-            return true;
+            return node.HowManyEndHere > 0;
         }
 
         /// Expected complexity: O(|element|)
@@ -43,44 +40,47 @@ namespace Trie
             if (!Contains(element)) {
                 return false;
             }
-            var node = root;
+            var node = _root;
             foreach (var c in element) {
-                node.Size -= 1;
-                if (node.Map[c].Size < 2) {
-                    node.Map.Remove(c);
-                    break;
+                node.Size--;
+                if (node.DictionaryFromCharToNode[c].Size < 2) {
+                    node.DictionaryFromCharToNode.Remove(c);
+                    return true;
                 }
-                node = node.Map[c];
+                node = node.DictionaryFromCharToNode[c];
             }
+            node.HowManyEndHere--;
             return true;
         }
 
         /// Expected complexity: O(1)
         public int Size()  { 
-            return root.Size;
+            return _root.Size;
         }
 
         /// Expected complexity: O(|prefix|)
         public int HowManyStartsWithPrefix(string prefix)  { 
-            var node = root;
+            var node = _root;
             foreach (var c in prefix) {
-                if (!node.Map.ContainsKey(c)) {
+                if (!node.DictionaryFromCharToNode.ContainsKey(c)) {
                     return 0;
                 }
-                node = node.Map[c];
+                node = node.DictionaryFromCharToNode[c];
             }
             return node.Size;
         }
 
         private class Node {
             public Node() {
-                this.Map = new Dictionary<char, Node>();
-                this.Size = 0;
+                DictionaryFromCharToNode = new Dictionary<char, Node>();
+                Size = 0;
+                HowManyEndHere = 0;
             }
-            public Dictionary<char, Node> Map { get; }
+            public Dictionary<char, Node> DictionaryFromCharToNode { get; }
             public int Size { get; set; }
+            public int HowManyEndHere;
         }
 
-        private Node root = new Node();
+        private readonly Node _root = new Node();
     }
 }
