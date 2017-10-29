@@ -71,5 +71,17 @@ namespace Option.Tests
             Assert.IsTrue(Option<int>.Flatten(Option<Option<int>>.Some(Option<int>.Some(1))).IsSome());
             Assert.AreEqual(Option<int>.Flatten(Option<Option<int>>.Some(Option<int>.Some(1))).Value(), 1);
         }
+        
+        [Test]
+        public void NoneEqualsNoneTest()
+        {
+            Assert.AreEqual(Option<int>.None(), Option<int>.None());
+        }
+
+        [Test]
+        public void SomeEqualsSomeTest()
+        {
+            Assert.IsTrue(Option<int>.Some(2).Map(x => x * 2) == Option<int>.Some(4));
+        }
     }
 }
