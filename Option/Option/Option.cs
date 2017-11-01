@@ -17,9 +17,14 @@ namespace Option
             this(default(T), false)
         {}
 
+        static Option()
+        {
+            _none = new Option<T>();
+        }
+
         private readonly T _val;
         private readonly bool _isSome;
-        private static readonly Option<T> _none = new Option<T>();
+        private static readonly Option<T> _none;
 
         public static Option<T> None() => _none;
 
