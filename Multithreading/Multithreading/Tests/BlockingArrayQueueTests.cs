@@ -24,7 +24,7 @@ namespace Multithreading.Tests
         [Test]
         public void TestAdd()
         {
-            const int threadNumber = 10;
+            const int threadNumber = 20;
             var threads = new Thread[threadNumber];
             for (var i = 0; i < threadNumber; ++i)
             {
@@ -41,7 +41,7 @@ namespace Multithreading.Tests
         [Test,  Timeout(2000)]
         public void TestAddAndDelete()
         {
-            const int threadNumber = 10;
+            const int threadNumber = 50;
             var threads = new Thread[threadNumber];
             var threadsDelete = new Thread[threadNumber];
             for (var i = 0; i < threadNumber; ++i)
@@ -62,7 +62,7 @@ namespace Multithreading.Tests
         [Test,  Timeout(2000)]
         public void TestDeleteAndAdd()
         {
-            const int threadNumber = 10;
+            const int threadNumber = 50;
             var threads = new Thread[threadNumber];
             var threadsDelete = new Thread[threadNumber];
             for (var i = 0; i < threadNumber; ++i)

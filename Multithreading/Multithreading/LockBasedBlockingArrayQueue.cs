@@ -7,7 +7,7 @@ namespace Multithreading
     {   
         private readonly Queue<T> _queue;
         private readonly object _lock;
-        public const int BufferSize = 1000;
+        public const int BufferSize = 20;
 
         public LockBasedBlockingArrayQueue()
         {
