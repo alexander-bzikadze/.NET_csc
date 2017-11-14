@@ -10,8 +10,7 @@ namespace Primes
         {
             IsItPrime = isItPrime;
         }
-
-        public CancellationTokenSource CancellationTokenSource { get; set; } = new CancellationTokenSource();
+        
         public BigInteger IsItPrime { get; }
     }
 }

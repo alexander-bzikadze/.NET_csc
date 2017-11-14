@@ -25,7 +25,7 @@ namespace Primes.Tests
         {
             var primeGetter = new PrimeGetter();
             var primeResultGetter = new PrimeResultGetter();
-            
+
             primeGetter.GetPrime(primeResultGetter, new PrimeArgs(i));
             Thread.Sleep(50);
             

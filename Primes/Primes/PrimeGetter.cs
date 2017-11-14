@@ -13,12 +13,12 @@ namespace Primes
             {
                 throw new ArgumentException("sender is not PrimeResultGetter!");
             }
-            var cancellationTokenSource = args.CancellationTokenSource;
+            result.Number = args.IsItPrime;
+            var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             var task = Task.Run(() =>
                 {
                     result.StartedEvaluation = true;
-                    result.Number = args.IsItPrime;
                     result.IsPrime = result.Number >= 1 && CalculatePrime(args.IsItPrime, result, cancellationToken);
                     result.IsEvaluated = true;
                 }, cancellationToken)
@@ -46,7 +46,6 @@ namespace Primes
                 {
                     return false;
                 }
-                result.Progress = (i - 2) / upperBound;
             }
             return true;
         }
