@@ -1,11 +1,14 @@
-﻿namespace Primes
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Primes
 {
     partial class PrimeForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -121,10 +124,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.ListBox listOfTasks;
-        private System.Windows.Forms.Button EnterNewValueButton;
-        private System.Windows.Forms.TextBox inputTextBox;
-        private System.Windows.Forms.Button canselTaskButton;
+        private TableLayoutPanel tableLayoutPanel1;
+        private ListBox listOfTasks;
+        private Button EnterNewValueButton;
+        private TextBox inputTextBox;
+        private Button canselTaskButton;
     }
 }

@@ -6,23 +6,23 @@ namespace Primes
 {
     public class PrimeLogic
     {
-        private List<CancellationTokenSource> cancelSource = new List<CancellationTokenSource>();
+        private readonly List<CancellationTokenSource> _cancelSource = new List<CancellationTokenSource>();
 
         public void RunEvaluation(BigInteger value, PrimeForm primeForm)
         {
-            var primeResultGetter = new PrimeResultGetter(cancelSource.Count, primeForm);
-            var (_, cancellationTokenSource) = primeGetter.GetPrime(primeResultGetter, new PrimeArgs(value));
-            cancelSource.Add(cancellationTokenSource);
+            var primeResultGetter = new PrimeResultGetter(_cancelSource.Count, primeForm);
+            var (_, cancellationTokenSource) = _primeGetter.GetPrime(primeResultGetter, new PrimeArgs(value));
+            _cancelSource.Add(cancellationTokenSource);
         }
 
         public void CancelEvaluation(int value)
         {
-            if (value < cancelSource.Count)
+            if (value < _cancelSource.Count)
             {
-                cancelSource[value].Cancel();
+                _cancelSource[value].Cancel();
             }
         }
 
-        PrimeGetter primeGetter = new PrimeGetter();
+        private readonly PrimeGetter _primeGetter = new PrimeGetter();
     }
 }

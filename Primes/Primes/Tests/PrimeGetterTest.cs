@@ -56,17 +56,7 @@ namespace Primes.Tests
             Assert.IsFalse(primeResultGetter.IsEvaluated);
         }
         
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        [TestCase(6)]
-        [TestCase(7)]
-        [TestCase(8)]
-        [TestCase(9)]
-        [TestCase(10)]
-        [TestCase(17)]
-        [TestCase(113)]
+        [TestCase(119218851371)]
         public async Task SimpleCancelTest(int i)
         {
             var primeGetter = new PrimeGetter();

@@ -1,80 +1,87 @@
-﻿using System;
-using System.Numerics;
-using System.Windows.Forms;
+﻿using System.Numerics;
 
 namespace Primes
 {
     public class PrimeResultGetter
     {
-        private PrimeForm primeForm;
-        delegate void StringAndNumberReturnVoidDelegate(int number, string text);
+        private readonly PrimeForm _primeForm;
+
+        private delegate void StringAndNumberReturnVoidDelegate(int number, string text);
 
         public PrimeResultGetter() { }
 
-        public PrimeResultGetter(int taskNumber, PrimeForm primeForm)
+        public PrimeResultGetter(int taskNumber, PrimeForm primeForm = null)
         {
             TaskNumber = taskNumber;
-            this.primeForm = primeForm;
+            _primeForm = primeForm;
         }
 
         public int TaskNumber { get; set; }
         public BigInteger Number { get; set; }
         public bool StartedEvaluation
         {
-            get => StartedEvaluation;
             set
             {
-                if (value)
+                if (!value || _primeForm == null)
                 {
-                    if (primeForm.InvokeRequired)
-                    {
-                        StringAndNumberReturnVoidDelegate d = new StringAndNumberReturnVoidDelegate(primeForm.SetTextForTask);
-                        primeForm.Invoke(d, new object[] { TaskNumber, string.Format("Task {1}: {0} is in progress.", Number, TaskNumber)});
-                    }
-                    else
-                    {
-                        primeForm.SetTextForTask(TaskNumber, string.Format("Task {1}: {0} is in progress.", Number, TaskNumber));
-                    }
+                    return;
+                }
+                if (_primeForm.InvokeRequired)
+                {
+                    StringAndNumberReturnVoidDelegate d = _primeForm.SetTextForTask;
+                    _primeForm.Invoke(d, TaskNumber, string.Format("Task {1}: {0} is in progress.", Number, TaskNumber));
+                }
+                else
+                {
+                    _primeForm.SetTextForTask(TaskNumber, string.Format("Task {1}: {0} is in progress.", Number, TaskNumber));
                 }
             }
         }
+
+        private bool _isEvaluated;
         public bool IsEvaluated
         {
-            get => IsEvaluated;
+            get => _isEvaluated;
             set
             {
-                if (value)
+                _isEvaluated = true;
+                if (!value || _primeForm == null)
                 {
-                    if (primeForm.InvokeRequired)
-                    {
-                        StringAndNumberReturnVoidDelegate d = new StringAndNumberReturnVoidDelegate(primeForm.SetTextForTask);
-                        primeForm.Invoke(d, new object[] { TaskNumber, string.Format("Task {2}: {0} is evaluated. Result: {1}.", Number, IsPrime, TaskNumber) });
-                    }
-                    else
-                    {
-                        primeForm.SetTextForTask(TaskNumber, string.Format("Task {2}: {0} is evaluated. Result: {1}.", Number, IsPrime, TaskNumber));
-                    }
+                    return;
+                }
+                if (_primeForm.InvokeRequired)
+                {
+                    StringAndNumberReturnVoidDelegate d = _primeForm.SetTextForTask;
+                    _primeForm.Invoke(d, TaskNumber, string.Format("Task {2}: {0} is evaluated. Result: {1}.", Number, IsPrime, TaskNumber));
+                }
+                else
+                {
+                    _primeForm.SetTextForTask(TaskNumber, string.Format("Task {2}: {0} is evaluated. Result: {1}.", Number, IsPrime, TaskNumber));
                 }
             }
         }
 
         public bool IsPrime { get; set; }
+
+        private bool _isCalceled;
         public bool IsCanceled
         {
-            get => IsCanceled;
+            get => _isCalceled;
             set
             {
-                if (value)
+                _isCalceled = value;
+                if (!value || _primeForm == null)
                 {
-                    if (primeForm.InvokeRequired)
-                    {
-                        StringAndNumberReturnVoidDelegate d = new StringAndNumberReturnVoidDelegate(primeForm.SetTextForTask);
-                        primeForm.Invoke(d, new object[] { TaskNumber, string.Format("Task {1}: {0} is canceled.", Number, TaskNumber) });
-                    }
-                    else
-                    {
-                        primeForm.SetTextForTask(TaskNumber, string.Format("Task {1}: {0} is canceled.", Number, TaskNumber));
-                    }
+                    return;
+                }
+                if (_primeForm.InvokeRequired)
+                {
+                    StringAndNumberReturnVoidDelegate d = _primeForm.SetTextForTask;
+                    _primeForm.Invoke(d, TaskNumber, string.Format("Task {1}: {0} is canceled.", Number, TaskNumber));
+                }
+                else
+                {
+                    _primeForm.SetTextForTask(TaskNumber, string.Format("Task {1}: {0} is canceled.", Number, TaskNumber));
                 }
             }
         }
