@@ -10,7 +10,7 @@ namespace Mini_Roguelike
             Game game;
             try
             {
-                game = args.Length != 0 ? new Game(args[1]) : new Game();
+                game = new Game(args.Length != 0 ? new CharGameMapReader(args[1]) : new CharGameMapReader());
             }
             catch (FileNotFoundException)
             {

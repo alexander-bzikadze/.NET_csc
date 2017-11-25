@@ -1,24 +1,30 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Mini_Roguelike
 {
     internal class CharGameMapReader : IGameMapReader
     {
-        public CharGameMapReader(string filename) => _filename = filename;
+        public CharGameMapReader(string filename = "./gameMap.txt") => _filename = filename;
 
-        public IGameMapReader ReadFile()
+        public GameMap GetMap()
         {
-            _readStrings = File.ReadAllLines(_filename);
-            return this;
+            string[] readStrings;
+            try
+            {
+                readStrings = File.ReadAllLines(_filename);
+            }
+            catch (Exception)
+            {
+                Console.Error.WriteLine("Error ocurred when reading map from {0}", _filename);
+                throw;
+            }
+            return new GameMap()
+                .GetBuilderForCharMap()
+                .SetMap(readStrings)
+                .Build();
         }
 
-        public GameMap GetMap() 
-            => new GameMap()
-                .GetBuilderForCharMap()
-                .SetMap(_readStrings)
-                .Build();
-        
         private readonly string _filename;
-        private string[] _readStrings;
     }
 }

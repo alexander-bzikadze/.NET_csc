@@ -2,7 +2,6 @@
 {
     internal interface IGameMapReader
     {
-        IGameMapReader ReadFile();
         GameMap GetMap();
     }
 }

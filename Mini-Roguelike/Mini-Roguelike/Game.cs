@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Mini_Roguelike
 {
@@ -6,21 +7,48 @@ namespace Mini_Roguelike
     {
         private readonly GameMap _gameMap;
         private readonly Player _player;
-        private string _gameMapFileName = "./gameMap.txt";
-
-        public event EventHandler<GameMapChangedArgs> MapChanged = (sender, args) => { };
-        public event EventHandler<EventArgs> GameContinues = (sender, args) => { };
-        
-        public Game(string gameMapFileName = "./gameMap.txt")
+        private static readonly Dictionary<ConsoleKey, KeyReaction> Actions = new Dictionary<ConsoleKey, KeyReaction>()
         {
-            _gameMapFileName = gameMapFileName;
-            _gameMap = new CharGameMapReader(gameMapFileName).ReadFile().GetMap();
+            {ConsoleKey.LeftArrow, new KeyReaction(p => p.MoveLeft(), -1, 0)},
+            {ConsoleKey.RightArrow, new KeyReaction(p => p.MoveRight(), 1, 0)},
+            {ConsoleKey.DownArrow, new KeyReaction(p => p.MoveDown(), 0, 1)},
+            {ConsoleKey.UpArrow, new KeyReaction(p => p.MoveUp(), 0, -1)}
+        };
+
+        private class KeyReaction
+        {
+            private readonly Action<Player> _playerAction;
+            private readonly int _xShift;
+            private readonly int _yShift;
+
+            internal KeyReaction(Action<Player> playerAction, int xShift, int yShift)
+            {
+                _playerAction = playerAction;
+                _xShift = xShift;
+                _yShift = yShift;
+            }
+
+            internal void React(GameMap gameMap, Player player)
+            {
+                if (gameMap.CanGo(player.X + _xShift, player.Y + _yShift))
+                {
+                    _playerAction.Invoke(player);
+                }
+            }
+        }
+
+        public event EventHandler<GameMapChangedArgs> MapChanged;
+        public event EventHandler<EventArgs> GameContinues;
+        
+        public Game(IGameMapReader mapReader)
+        {
+            _gameMap = mapReader.GetMap();
             _player = new Player();
         }
 
         public void Start()
         {
-            var timeToBreak = true;
+            var timeToBreak = false;
             foreach (var line in _gameMap)
             {
                 var j = 0;
@@ -35,7 +63,7 @@ namespace Mini_Roguelike
                         }
                         break;
                     }
-                    j++;
+                    ++j;
                 }
                 if (timeToBreak)
                 {
@@ -47,61 +75,31 @@ namespace Mini_Roguelike
             {
                 throw new ArgumentException("Not a single cell for a player on the map. Argh!");
             }
-            MapChanged(this, new GameMapChangedArgs(_gameMap, _player));
-            GameContinues(this, EventArgs.Empty);
+            MapChanged?.Invoke(this, new GameMapChangedArgs(_gameMap, _player));
+            GameContinues?.Invoke(this, EventArgs.Empty);
         }
 
         public void NewGameIteration(object sender, KeyPressedArgs args)
         {
-            var mapChanged = false;
-            switch (args.Key)
+            switch (args.GameChange)
             {
-                case ConsoleKey.Q:
+                case KeyPressedArgs.GameChangeEnum.NewPosition:
                 {
+                    Actions[args.Key].React(_gameMap, _player);
+                    break;
+                }
+                case KeyPressedArgs.GameChangeEnum.Cancel:
+                {
+                    return;   
+                }
+                default:
+                {
+                    Console.WriteLine("Wrong key, result ignored. Remind: Q to exit, arrows to move.");
                     return;
                 }
-                case ConsoleKey.LeftArrow:
-                {
-                    if (_gameMap.CanGo(_player.X - 1, _player.Y))
-                    {
-                        _player.MoveLeft();
-                        mapChanged = true;
-                    }
-                    break;
-                }
-                case ConsoleKey.RightArrow:
-                {
-                    if (_gameMap.CanGo(_player.X + 1, _player.Y))
-                    {
-                        _player.MoveRight();
-                        mapChanged = true;
-                    }
-                    break;
-                }
-                case ConsoleKey.UpArrow:
-                {
-                    if (_gameMap.CanGo(_player.X, _player.Y - 1))
-                    {
-                        _player.MoveUp();
-                        mapChanged = true;
-                    }
-                    break;
-                }
-                case ConsoleKey.DownArrow:
-                {
-                    if (_gameMap.CanGo(_player.X, _player.Y + 1))
-                    {
-                        _player.MoveDown();
-                        mapChanged = true;
-                    }
-                    break;
-                }
             }
-            if (mapChanged)
-            {
-                MapChanged(this, new GameMapChangedArgs(_gameMap, _player));
-            }
-            GameContinues(this, EventArgs.Empty);
+            MapChanged?.Invoke(this, new GameMapChangedArgs(_gameMap, _player));
+            GameContinues?.Invoke(this, EventArgs.Empty);
         }
     }
 }
