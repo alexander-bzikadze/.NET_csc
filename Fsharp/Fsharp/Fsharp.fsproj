@@ -34,7 +34,16 @@
     <OtherFlags>--warnon:1182</OtherFlags>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FsCheck, Version=2.10.4.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\FsCheck.2.10.4\lib\portable-net45+netcore45\FsCheck.dll</HintPath>
+    </Reference>
+    <Reference Include="FsUnit.NUnit, Version=3.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\FsUnit.3.0.0\lib\net45\FsUnit.NUnit.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -51,6 +60,7 @@
     <Compile Include="Program.fs" />
     <Content Include="packages.config" />
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

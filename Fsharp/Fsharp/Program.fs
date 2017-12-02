@@ -1,17 +1,38 @@
-﻿open Library
+﻿open NUnit.Framework
+open FsUnit
+open FsCheck
+open Library
 
-printfn "%d" <| fibs 1
-printfn "%d" <| fibs 2
-printfn "%d" <| fibs 3
-printfn "%d" <| fibs 4
-printfn "%d" <| fibs 5
+fibs 1 |> should equal 1
+fibs 2 |> should equal 1
+fibs 3 |> should equal 2
+fibs 4 |> should equal 3
+fibs 5 |> should equal 5
+fibs 6 |> should equal 8
+fibs 7 |> should equal 13
 
-printfn "%A" <| rev [1;2;3;4;5;6]
-printfn "%A" <| rev [1;2;3;6;5;4]
+let rec fibinit = seq {
+    yield 0
+    yield 1
+    yield! Seq.map2 (+) fibinit (fibinit |> Seq.skip 1)
+    }
+    
+let listsShouldBeEqual x y = x |> should equal y
+let evaluateAndIgnore = Seq.toList >> ignore
 
-printfn "%A" <| mergeSort [6;5;4;3;2;1]
-printfn "%A" <| mergeSort [1;2;3;6;5;4;3]
+Seq.initInfinite id |> Seq.map fibs |> Seq.map2 listsShouldBeEqual <| fibinit 
+|> Seq.take 30 |> evaluateAndIgnore
+   
+Check.Quick <| fun l -> (List.rev l) = (Library.rev l)
 
-printfn "%i" <| calc (Plus ((Val 1), (Val 2)))
+Seq.map  <| fun l -> (List.sort l) = (Library.mergeSort l) 
+<| Seq.ofList [[]; [1]; [1;2]; [2;1]; [3;2;1]; [1;2;3]; [5;4;3;2;1]]
+|> Seq.map (should be True) |> evaluateAndIgnore
 
-printfn "%A" <| Seq.take 10 primes
+calc <| Plus ((Val 1), (Val 2)) |> should equal 3
+calc <| Subt ((Val 1), (Val 2)) |> should equal -1
+calc <| Mult ((Val 1), (Val 2)) |> should equal 2
+calc (Divi ((Val 4), (Val 2))) |> should equal 2
+
+Seq.take 10 primes |> Seq.map2 listsShouldBeEqual <| Seq.ofList [2; 3; 5; 7; 11; 13; 17; 19; 23; 29]
+|> evaluateAndIgnore

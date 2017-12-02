@@ -7,7 +7,7 @@ let fibs =
         | _ when n > 0 -> helper b <| a + b <| n - 1
     helper 1 0 
     
-let rev l =
+let rev l = 
     let rec helper l x =
         match x with
         | a::ax -> helper <| a::l <| ax
@@ -29,12 +29,12 @@ let rec mergeSort l =
         let a, b = List.splitAt <| List.length l / 2 <| l
         merge <| mergeSort a <| mergeSort b <| []
         
-type Oper =
-    | Val of int
-    | Plus of Oper * Oper
-    | Subt of Oper * Oper
-    | Mult of Oper * Oper
-    | Divi of Oper * Oper
+type Oper<'a> =
+    | Val of 'a
+    | Plus of Oper<'a> * Oper<'a>
+    | Subt of Oper<'a> * Oper<'a>
+    | Mult of Oper<'a> * Oper<'a>
+    | Divi of Oper<'a> * Oper<'a>
     
 let rec calc o =
     match o with
