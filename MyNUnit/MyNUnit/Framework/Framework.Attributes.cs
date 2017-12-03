@@ -5,7 +5,7 @@ namespace MyNUnit.Framework
 {
     public class Test : Attribute
     {
-        public Type Expected { get; set; } = null;
+        public Type Expected { get; set; }
         public string Ignore { get; set; } = "";
     }
 

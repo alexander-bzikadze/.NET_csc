@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -7,13 +8,13 @@ namespace MyNUnit.Tests
     [TestFixture]
     public class TestRunnerTest
     {
-        private const string Homedir = "/Users/bzik/Documents/CSCenter/DotNet.Fall2017/";
-        private const string NavigateInDir = "DotNET_csc/MyNUnit/MyNUnit/Tests/TestFiles/";
+        private static readonly string Homedir = TestContext.CurrentContext.TestDirectory;
+        private const string NavigateInDir = "../../Tests/TestFiles/";
 
         [Test]
         public void TestNoBefore()
         {
-            const string localDir = "NoBeforeAfter/";
+            const string localDir = "./NoBeforeAfter/";
             var result = RunTest(localDir);
             var enumerable =  RunTest(localDir) as IList<string> ?? result.ToList();
             Assert.IsTrue(enumerable.Where(x => x.Contains("Test successfully finished")).ToList().Count == 3);
@@ -25,7 +26,7 @@ namespace MyNUnit.Tests
         [Test]
         public void TestMethodBefore()
         {
-            const string localDir = "MethodBeforeAfter/";
+            const string localDir = "./MethodBeforeAfter/";
             var result = RunTest(localDir);
             var enumerable =  RunTest(localDir) as IList<string> ?? result.ToList();
             Assert.IsTrue(enumerable.Where(x => x.Contains("Test successfully finished")).ToList().Count == 3);
@@ -37,7 +38,7 @@ namespace MyNUnit.Tests
         [Test]
         public void TestClassBefore()
         {
-            const string localDir = "ClassBeforeAfter/";
+            const string localDir = "./ClassBeforeAfter/";
             var result = RunTest(localDir);
             var enumerable =  RunTest(localDir) as IList<string> ?? result.ToList();
             Assert.IsTrue(enumerable.Where(x => x.Contains("Test successfully finished")).ToList().Count == 3);
@@ -47,6 +48,6 @@ namespace MyNUnit.Tests
         }
 
         private static IEnumerable<string> RunTest(string localDir) => 
-            new TestRunner(Homedir + NavigateInDir + localDir).RunTests();
+            new TestRunner(Path.Combine(Homedir, NavigateInDir, localDir)).RunTests();
     }
 }

@@ -2,51 +2,66 @@ using System;
 using MyNUnit.Framework;
 using System.IO;
 
-namespace NoBeforeAfter {
-	public class CL {
+namespace NoBeforeAfter 
+{
+	public class CL 
+	{
 		[Test]
-		public void Succ1() {
+		public void SuccessfulTestMethod1() 
+		{
 		}
 		[Test]
-		public void Succ2() {
+		public void SuccessfulTestMethod2() 
+		{
 		}
 		[Test]
-		public void Succ3() {
+		public void SuccessfulTestMethod3() 
+		{
 		}
 		[Test(Ignore="Just because we can")]
-		public void Ignore1() {
+		public void IgnoredTestMethod1() 
+		{
 		}
 		[Test(Ignore="Just because we can")]
-		public void Ignore2() {
+		public void IgnoredTestMethod2() 
+		{
 		}
 		[Test(Ignore="Just because we can")]
-		public void Ignore3() {
+		public void IgnoredTestMethod3() 
+		{
 		}
 		[Test(Expected=typeof(AssertionException))]
-		public void ShoudlFail1() {
-			throw new AssertionException("Just because we can");
-		}
-		[Test(Expected=typeof(AssertionException))]
-		public void ShouldFail2() {
+		public void ExpectionExceptionTestMethod1() 
+		{
 			throw new AssertionException("Just because we can");
 		}
 		[Test(Expected=typeof(AssertionException))]
-		public void ShouldFail3() {
+		public void ExpectionExceptionTestMethod2() 
+		{
+			throw new AssertionException("Just because we can");
+		}
+		[Test(Expected=typeof(AssertionException))]
+		public void ExpectionExceptionTestMethod3() 
+		{
 			throw new AssertionException("Just because we can");
 		}
 		[Test]
-		public void ShoudlNotFail1() {
+		public void FailingWithAssertationTestMethod1() 
+		{
 			throw new AssertionException("Just because we can");
 		}
 		[Test]
-		public void ShouldNotFail2() {
+		public void FailingWithAssertationTestMethod2() 
+		{
 			throw new AssertionException("Just because we can");
 		}
 		[Test]
-		public void ShouldNotFail3() {
+		public void FailingWithAssertationTestMethod3() 
+		{
 			throw new AssertionException("Just because we can");
 		}
-		public void ShouldNotBeRun() {
+		public void ShouldNeverBeRanTestMethod() 
+		{
 		}
 	}
 }
