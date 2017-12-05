@@ -7,37 +7,31 @@ namespace TicTacToe
         private readonly Action _firstPlayerWin;
         private readonly Action _secondPlayerWin;
         private readonly Action _noOneWins;
-        private readonly GameWindow _gameWindow;
+        private readonly Action<int, int, string> _setCell;
+        private readonly Action<AbstractGameLogic> _unsubscribe;
+
         protected readonly PlayerOwner[,] _field;
         protected bool _isFirstPlayerTurn;
         protected bool _gameHasStopped;
 
         public const string Xs = "X";
         public const string Os = "O";
-        private Action firstPlayerWin;
-        private Action secondPlayerWin;
-        private GameWindow gameWindow;
 
-        protected abstract string GameType { get; }
-        protected abstract void NextTurn();
+        public abstract string GameType { get; }
 
-        public AbstractGameLogic(Action firstPlayerWin, Action secondPlayerWin, Action noOneWins, GameWindow gameWindow)
+        public AbstractGameLogic(Action firstPlayerWin, 
+            Action secondPlayerWin, 
+            Action noOneWins,
+            Action<int, int, string> setCell,
+            Action<AbstractGameLogic> unsubscribe)
         {
             _firstPlayerWin = firstPlayerWin;
             _secondPlayerWin = secondPlayerWin;
             _noOneWins = noOneWins;
-            _gameWindow = gameWindow;
-            _gameWindow.MoveMade += ReactOnMove;
-            _gameWindow.SetGameType(GameType);
+            _setCell = setCell;
             _field = new PlayerOwner[3, 3];
             _isFirstPlayerTurn = true;
-        }
-
-        public AbstractGameLogic(Action firstPlayerWin, Action secondPlayerWin, GameWindow gameWindow)
-        {
-            this.firstPlayerWin = firstPlayerWin;
-            this.secondPlayerWin = secondPlayerWin;
-            this.gameWindow = gameWindow;
+            _unsubscribe = unsubscribe;
         }
 
         public virtual void ReactOnMove(object sender, ReactOnMoveArguments args)
@@ -47,36 +41,30 @@ namespace TicTacToe
             if (_field[x, y] == PlayerOwner.None)
             {
                 _field[x, y] = _isFirstPlayerTurn ? PlayerOwner.First : PlayerOwner.Second;
-                _gameWindow.SetCell(x, y, _isFirstPlayerTurn ? Xs : Os);
+                _setCell(x, y, _isFirstPlayerTurn ? Xs : Os);
                 _isFirstPlayerTurn = !_isFirstPlayerTurn;
                 switch (CheckForWin())
                 {
                     case PlayerOwner.First:
-                       _firstPlayerWin();
-                        StopGame();
+                        _firstPlayerWin();
                         _gameHasStopped = true;
+                        _unsubscribe(this);
                         break;
                     case PlayerOwner.Second:
                         _secondPlayerWin();
-                        StopGame();
                         _gameHasStopped = true;
+                        _unsubscribe(this);
                         break;
                     case PlayerOwner.None:
                         if (!GameContinues())
                         {
                             _noOneWins();
-                            StopGame();
                             _gameHasStopped = true;
+                            _unsubscribe(this);
                         }
                         break;
                 }
             }
-        }
-
-        public void StopGame()
-        {
-            _gameWindow.MoveMade -= ReactOnMove;
-            _gameWindow.Close();
         }
 
         private bool CheckThreeCells(int x0, int y0, int x1, int y1, int x2, int y2) 

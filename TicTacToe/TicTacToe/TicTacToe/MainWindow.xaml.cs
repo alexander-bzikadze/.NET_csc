@@ -18,9 +18,69 @@ namespace TicTacToe
         private int _compDraws;
         private int _compPlusDraws;
 
+        private InformationPasser _informationPasser;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _informationPasser = new InformationPasser(this);
+            PlayerButton.Click += _informationPasser.OpenNewPlayerGame;
+            CompButton.Click += _informationPasser.OpenNewCompGame;
+            CompPlusButton.Click += _informationPasser.OpenNewCompPlusGame;
+        }
+
+        private class InformationPasser
+        {
+            MainWindow _mother;
+
+            internal InformationPasser(MainWindow mother)
+            {
+                _mother = mother;
+            }
+
+            private void PrepareWindowAndLogic(GameWindow gameWindow, AbstractGameLogic logic)
+            {
+                gameWindow.MoveMade += logic.ReactOnMove;
+                gameWindow.SetGameType(logic.GameType);
+                gameWindow.Show();
+            }
+
+            internal void OpenNewPlayerGame(object sender, RoutedEventArgs args)
+            {
+                var gameWindow = new GameWindow();
+                AbstractGameLogic logic = new TwoPlayersGameLogic(
+                    () => { _mother.IncPlayersVictories(); gameWindow.FirstWins(); },
+                    () => { _mother.IncPlayersDefeats(); gameWindow.SecondWins(); },
+                    () => { _mother.IncPlayersDraws(); gameWindow.NoneWins(); },
+                    gameWindow.SetCell,
+                    l => { gameWindow.MoveMade -= l.ReactOnMove; });
+                PrepareWindowAndLogic(gameWindow, logic);
+            }
+
+            internal void OpenNewCompGame(object sender, RoutedEventArgs args)
+            {
+                var gameWindow = new GameWindow();
+                AbstractGameLogic logic = new CompGameLogic(
+                    () => { _mother.IncCompVictories(); gameWindow.FirstWins();  },
+                    () => { _mother.IncCompDefeats(); gameWindow.SecondWins(); },
+                    () => { _mother.IncCompDraws(); gameWindow.NoneWins(); },
+                    gameWindow.SetCell,
+                    l => { gameWindow.MoveMade -= l.ReactOnMove; });
+                PrepareWindowAndLogic(gameWindow, logic);
+            }
+
+            internal void OpenNewCompPlusGame(object sender, RoutedEventArgs args)
+            {
+                var gameWindow = new GameWindow();
+                AbstractGameLogic logic = new CompPlusGameLogic(
+                    () => { _mother.IncCompPlusVictories(); gameWindow.FirstWins(); },
+                    () => { _mother.IncCompPlusDefeats(); gameWindow.SecondWins(); },
+                    () => { _mother.IncCompPlusDraws(); gameWindow.NoneWins(); },
+                    gameWindow.SetCell,
+                    l => { gameWindow.MoveMade -= l.ReactOnMove; });
+                PrepareWindowAndLogic(gameWindow, logic);
+            }
         }
 
         private void IncPlayersDefeats()
@@ -77,41 +137,11 @@ namespace TicTacToe
             CompPlusDraw.Content = _compPlusDraws.ToString();
         }
 
-        private void OpenNewPlayerGame(object sender, RoutedEventArgs args)
-        {
-            var w = new GameWindow();
-            AbstractGameLogic logic = new TwoPlayersGameLogic(
-                IncPlayersVictories, 
-                IncPlayersDefeats,
-                IncPlayersDraws,
-                w);
-            w.Show();
-        }
-
-        private void OpenNewCompGame(object sender, RoutedEventArgs args)
-        {
-            var w = new GameWindow();
-            AbstractGameLogic logic = new CompGameLogic(
-                IncCompVictories,
-                IncCompDefeats,
-                IncCompDraws,
-                w);
-            w.Show();
-        }
-
-        private void OpenNewCompPlusGame(object sender, RoutedEventArgs args)
-        {
-            var w = new GameWindow();
-            AbstractGameLogic logic = new CompPlusGameLogic(
-                IncCompPlusVictories,
-                IncCompPlusDefeats,
-                IncCompPlusDraws,
-                w);
-            w.Show();
-        }
-
         private void Window_Closed(object sender, EventArgs e)
         {
+            PlayerButton.Click -= _informationPasser.OpenNewPlayerGame;
+            CompButton.Click -= _informationPasser.OpenNewCompGame;
+            CompPlusButton.Click -= _informationPasser.OpenNewCompPlusGame;
             App.Current.Shutdown();
         }
     }

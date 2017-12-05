@@ -27,7 +27,8 @@
         <Button x:Name="Button20" x:FieldModifier="private" Content="." Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ClickButton20"/>
         <Button x:Name="Button21" x:FieldModifier="private" Content="." Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ClickButton21"/>
         <Button x:Name="Button22" x:FieldModifier="private" Content="." Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="ClickButton22"/>
-        <Label x:Name="Label" x:FieldModifier="private" Content="" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="Label" x:FieldModifier="private" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"/>
+        <Label x:Name="Result" x:FieldModifier="private" Content="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
 
     </Grid>
 </Window>

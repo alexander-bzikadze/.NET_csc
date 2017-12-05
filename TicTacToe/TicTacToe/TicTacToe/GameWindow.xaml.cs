@@ -70,6 +70,10 @@ namespace TicTacToe
             button.Content = cell;
         }
 
+        public void FirstWins() => Result.Content = "Первый игрок побеждает!";
+        public void SecondWins() => Result.Content = "Второй игрок побеждает!";
+        public void NoneWins() => Result.Content = "Ничья!";
+
         private void ClickButton00(object sender, RoutedEventArgs args) => MoveMade?.Invoke(this, new ReactOnMoveArguments(0, 0));
         private void ClickButton01(object sender, RoutedEventArgs args) => MoveMade?.Invoke(this, new ReactOnMoveArguments(0, 1));
         private void ClickButton02(object sender, RoutedEventArgs args) => MoveMade?.Invoke(this, new ReactOnMoveArguments(0, 2));

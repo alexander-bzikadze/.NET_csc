@@ -4,15 +4,15 @@ namespace TicTacToe
 {
     public class TwoPlayersGameLogic : AbstractGameLogic
     {
-        public TwoPlayersGameLogic(Action firstPlayerWin, Action secondPlayerWin, Action noOneWins, GameWindow gameWindow) 
-            : base(firstPlayerWin, secondPlayerWin, noOneWins, gameWindow)
+        public TwoPlayersGameLogic(Action firstPlayerWin, 
+            Action secondPlayerWin, 
+            Action noOneWins, 
+            Action<int, int, string> setCell, 
+            Action<AbstractGameLogic> unsubscribe)
+            : base(firstPlayerWin, secondPlayerWin, noOneWins, setCell, unsubscribe)
         {
         }
 
-        protected override string GameType { get; } = "Игра на двух игроков";
-
-        protected override void NextTurn()
-        {
-        }
+        public override string GameType { get; } = "Игра на двух игроков";
     }
 }

@@ -21,9 +21,9 @@
             <RowDefinition Height="4*"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
-        <Button Content="Начать игру с игроком" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center" Click="OpenNewPlayerGame"/>
-        <Button Content="Начать игру с компьютером" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center" Click="OpenNewCompGame"/>
-        <Button Content="Начать игру с компьютером++" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center" Click="OpenNewCompPlusGame"/>
+        <Button x:Name="PlayerButton" x:FieldModifier="private" Content="Начать игру с игроком" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
+        <Button x:Name="CompButton" x:FieldModifier="private" Content="Начать игру с компьютером" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
+        <Button x:Name="CompPlusButton" x:FieldModifier="private" Content="Начать игру с компьютером++" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
         <Label x:Name="CompPlusVictory" x:FieldModifier="private" Content="0" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
         <Label x:Name="CompVictory" x:FieldModifier="private" Content="0" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
         <Label x:Name="PlayerDefeat" x:FieldModifier="private" Content="0" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
@@ -37,5 +37,6 @@
         <Label x:Name="CompDraw" x:FieldModifier="private" Content="0" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
         <Label x:Name="PlayerDraw" x:FieldModifier="private" Content="0" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
         <Label Content="Ничьи" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
+        <Label Content="Крестики-Нолики" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment ="Center"/>
     </Grid>
 </Window>
