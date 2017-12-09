@@ -4,15 +4,15 @@ namespace Multithreading
 {
     public class Queue<T>
     {
-        private int _first;
-        private int _last;
+        public int First { get; private set; }
+        public int Last { get; private set; }
         private readonly T[] _array;
 
         internal Queue(int bufferSize)
         {
             _array = new T[bufferSize];
-            _first = 0;
-            _last = 0;
+            First = 0;
+            Last = 0;
         }
 
         internal void Enqueue(T e)
@@ -21,8 +21,8 @@ namespace Multithreading
             {
                 throw new InvalidOperationException("Buffer is full");
             }
-            _last %= BufferSize();
-            _array[_last++] = e;
+            Last %= BufferSize();
+            _array[Last++] = e;
         }
 
         internal T Dequeue()
@@ -31,29 +31,29 @@ namespace Multithreading
             {
                 throw new InvalidOperationException("Buffer is empty");
             }
-            var d = _array[_first++];
-            if (_first < BufferSize())
+            var d = _array[First++];
+            if (First < BufferSize())
             {
                 return d;
             }
-            _first %= BufferSize();
-            _last %= BufferSize();
+            First %= BufferSize();
+            Last %= BufferSize();
             return d;
         }
 
         internal void Clear()
         {
-            _first = _last = 0;
+            First = Last = 0;
         }
 
         internal bool Empty()
         {
-            return _first == _last;
+            return First == Last;
         }
 
         internal int Size()
         {
-            return _first > _last ? BufferSize() - _first + _last : _last - _first;
+            return First > Last ? BufferSize() - First + Last : Last - First;
         }
 
         internal int BufferSize()
@@ -64,7 +64,7 @@ namespace Multithreading
         public Queue<T> Clone()
         {
             var q = new Queue<T>(BufferSize());
-            for (var i = _first; i != _last; i = i + 1 % BufferSize())
+            for (var i = First; i != Last; i = i + 1 % BufferSize())
             {
                 q.Enqueue(_array[i]);
             }

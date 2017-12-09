@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 
 namespace Multithreading
@@ -9,40 +10,56 @@ namespace Multithreading
 
         public Philosophers(int numberOfPhils)
         {
-            if (numberOfPhils < 0)
+            if (numberOfPhils < 1)
             {
                 throw new ArgumentException("Negative number of philosophers.");
             }
-            _forks = new object[numberOfPhils];
+            _forks = Enumerable.Range(0, numberOfPhils).Select(_ => new object()).ToArray();
+        }
+
+        private void CheckArgument(int i)
+        {
+            if (i < 0 && i >= _forks.Length)
+            {
+                throw new ArgumentException("There is no such philosopher.");
+            }
         }
 
         public Philosophers StartEating(int i)
         {
-            if (i >= 0 && i < _forks.Length)
-            {
-                throw new ArgumentException("There is no such philosopher.");
-            }
+            CheckArgument(i);
             while (true)
             {
-                if (!Monitor.TryEnter(_forks[i]))
+                try
                 {
-                    continue;
+                    if (!Monitor.TryEnter(_forks[i]))
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        if (!Monitor.TryEnter(_forks[(i + 1) % _forks.Length]))
+                        {
+                            continue;
+                        }
+                        break;
+                    }
+                    finally
+                    {
+                        Monitor.Exit(_forks[(i + 1) % _forks.Length]);
+                    }
                 }
-                if (!Monitor.TryEnter(_forks[i + 1 % _forks.Length]))
+                finally
                 {
-                    break;
+                    Monitor.Exit(_forks[i]);
                 }
-                Monitor.Exit(_forks[i]);
             }
             return this;
         }
 
         public Philosophers StopEating(int i)
         {
-            if (i >= 0 && i < _forks.Length)
-            {
-                throw new ArgumentException("There is no such philosopher.");
-            }
+            CheckArgument(i);
             if (Monitor.IsEntered(_forks[i]))
             {
                 Monitor.Exit(_forks[i]);

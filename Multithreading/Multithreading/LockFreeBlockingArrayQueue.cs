@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Multithreading
 {
@@ -7,6 +6,9 @@ namespace Multithreading
     {
         private Queue<T> _queue;
         public const int BufferSize = 1000;
+
+        private int _numberOfDone;
+        private int _numberOfAll;
 
         public LockFreeBlockingArrayQueue()
         {
@@ -23,47 +25,58 @@ namespace Multithreading
 
         public (bool, IBlockingArrayQueue<T>) TryEnqueue(T e)
         {
-            var originalQueue = _queue;
-            if (originalQueue.BufferSize() == originalQueue.Size())
+            var currentNumber = _numberOfAll; 
+            Interlocked.Increment(ref _numberOfAll);
+            while (currentNumber > _numberOfDone)
             {
-                return (false, this);
             }
-            var modifiedQueue = originalQueue.Clone();
-            modifiedQueue.Enqueue(e);
-            Interlocked.CompareExchange(ref _queue, modifiedQueue, originalQueue);
-            return (_queue == modifiedQueue, this);
+            var success = _queue.Size() != _queue.BufferSize();
+            if (success)
+            {
+                _queue.Enqueue(e);
+            }
+            Interlocked.Increment(ref _numberOfDone);
+            return (success, this);
         }
 
         public T Dequeue()
         {
-            var (suc, value) = TryDequeue();
-            while (!suc)
+            var (success, value) = TryDequeue();
+            while (!success)
             {
-                (suc, value) = TryDequeue();
+                (success, value) = TryDequeue();
             }
             return value;
         }
 
         public (bool, T) TryDequeue()
         {
-            var originalQueue = _queue;
-            if (originalQueue.Empty())
+            var currentNumber = _numberOfAll; 
+            Interlocked.Increment(ref _numberOfAll);
+            while (currentNumber > _numberOfDone)
             {
-                return (false, default(T));
             }
-            var modifiedQueue = originalQueue.Clone();
-            var d = modifiedQueue.Dequeue();
-            Interlocked.CompareExchange(ref _queue, modifiedQueue, originalQueue);
-            return (_queue == modifiedQueue, d);
+            var d = default(T);
+            var success = !_queue.Empty();
+            if (success)
+            {
+                d = _queue.Dequeue();
+            }
+            Interlocked.Increment(ref _numberOfDone);
+            return (success, d);
         }
+
+        public string Mes { get; private set;  }
 
         public IBlockingArrayQueue<T> Clear()
         {
-            var (suc, _) = TryClear();
-            while (!suc)
+            var currentNumber = _numberOfAll; 
+            Interlocked.Increment(ref _numberOfAll);
+            while (currentNumber > _numberOfDone)
             {
-                (suc, _)= TryClear();
             }
+            _queue.Clear();
+            Interlocked.Increment(ref _numberOfDone);
             return this;
         }
 
@@ -75,9 +88,6 @@ namespace Multithreading
             return (_queue == modifiedQueue, this);
         }
 
-        public int Size()
-        {
-            return _queue.Size();
-        }
+        public int Size => _queue.Size();
     }
 }

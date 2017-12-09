@@ -9,8 +9,7 @@
         (bool, T) TryDequeue();
 
         IBlockingArrayQueue<T> Clear();
-        (bool, IBlockingArrayQueue<T>) TryClear();
 
-        int Size();
+        int Size { get; }
     }
 }

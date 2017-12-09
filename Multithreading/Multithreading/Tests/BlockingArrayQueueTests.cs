@@ -21,7 +21,7 @@ namespace Multithreading.Tests
             _queue.Clear();
         }
 
-        [Test]
+        [Test,  Timeout(2000)]
         public void TestAdd()
         {
             const int threadNumber = 20;
@@ -35,7 +35,7 @@ namespace Multithreading.Tests
             {
                 threads[i].Join();
             }
-            Assert.AreEqual(threadNumber, _queue.Size());
+            Assert.AreEqual(threadNumber, _queue.Size);
         }
 
         [Test,  Timeout(2000)]
@@ -56,10 +56,10 @@ namespace Multithreading.Tests
                 threads[i].Join();
                 threadsDelete[i].Join();
             }
-            Assert.AreEqual(0, _queue.Size());
+            Assert.AreEqual(0, _queue.Size);
         }
 
-        [Test,  Timeout(2000)]
+        [Test,  Timeout(20000)]
         public void TestDeleteAndAdd()
         {
             const int threadNumber = 50;
@@ -83,7 +83,7 @@ namespace Multithreading.Tests
             {
                 threadsDelete[i].Join();
             }
-            Assert.AreEqual(0, _queue.Size());
+            Assert.AreEqual(0, _queue.Size);
         }
     }
 }

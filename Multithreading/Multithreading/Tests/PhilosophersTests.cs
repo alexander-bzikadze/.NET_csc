@@ -18,7 +18,6 @@ namespace Multithreading.Tests
             var numberOfFinishedEathinPhils = 0;
             for (var i = 0; i < numberOfPhils; ++i)
             {
-                // Why resharper marks it as a problem?
                 var i1 = i;
                 threads.Add(new Thread(() =>
                 {
@@ -40,7 +39,7 @@ namespace Multithreading.Tests
             Assert.AreEqual(numberOfPhils, numberOfFinishedEathinPhils);
         }
 
-        [Test, Timeout(1000)]
+        [Test, Timeout(10000)]
         public void TestRandomPhilosophers([Range( 2, 10, 2 )] int numberOfPhils)
         {
             var threads = new List<Thread>();

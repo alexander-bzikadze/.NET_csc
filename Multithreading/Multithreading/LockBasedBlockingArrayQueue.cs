@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Multithreading
 {
@@ -31,51 +30,45 @@ namespace Multithreading
 
         public (bool, IBlockingArrayQueue<T>) TryEnqueue(T e)
         {
-            if (!Monitor.TryEnter(_lock))
+            lock (_lock)
             {
-                return (false, this);
-            }
-            var result = _queue.Size() != _queue.BufferSize();
-            if (result)
-            {
+                if (_queue.Size() != _queue.BufferSize())
+                {
+                    return (false, this);
+                }
                 _queue.Enqueue(e);
+                Monitor.Pulse(_lock);
+                return (true, this);
             }
-            Monitor.Pulse(_lock);
-            Monitor.Exit(_lock);
-            return (result, this);
         }
 
         public T Dequeue()
         {
-            var d = default(T);
             lock (_lock)
             {
                 while (_queue.Empty())
                 {
                     Monitor.Wait(_lock);
                 }
-                d = _queue.Dequeue();
+                var d = _queue.Dequeue();
                 Monitor.Pulse(_lock);
+                return d;
             }
-            return d;
         }
 
         public (bool, T) TryDequeue()
         {
-            var result = false;
-            var d = default(T);
-            if (!Monitor.TryEnter(_lock))
+            lock (_lock)
             {
-                return (result, d);
-            }
-            result = _queue.Empty();
-            if (result)
-            {
+                var d = default(T);
+                if (_queue.Empty())
+                {
+                    return (false, d);
+                }
                 d = _queue.Dequeue();
+                Monitor.Pulse(_lock);
+                return (true, d);
             }
-            Monitor.Pulse(_lock);
-            Monitor.Exit(_lock);
-            return (result, d);
         }
 
         public IBlockingArrayQueue<T> Clear()
@@ -83,25 +76,11 @@ namespace Multithreading
             lock (_lock)
             {
                 _queue.Clear();
+                Monitor.Pulse(_lock);
             }
             return this;
         }
 
-        public (bool, IBlockingArrayQueue<T>) TryClear()
-        {
-            if (!Monitor.TryEnter(_lock))
-            {
-                return (false, this);
-            }
-            _queue.Clear();
-            Monitor.Pulse(_lock);
-            Monitor.Exit(_lock);
-            return (false, this);
-        }
-
-        public int Size()
-        {
-            return _queue.Size();
-        }
+        public int Size => _queue.Size();
     }
 }
