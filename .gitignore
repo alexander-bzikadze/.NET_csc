@@ -1,0 +1,11 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Primes/.vs/Primes/v15
+/Primes/packages
+/Primes/Primes/bin
+/Primes/Primes/obj
+/Trie/Trie/obj/Debug
+*.cache
