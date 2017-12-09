@@ -3,17 +3,17 @@ open FsUnit
 open FsCheck
 open Library
 
-fibs 1 |> should equal 1
-fibs 2 |> should equal 1
-fibs 3 |> should equal 2
-fibs 4 |> should equal 3
-fibs 5 |> should equal 5
-fibs 6 |> should equal 8
-fibs 7 |> should equal 13
+fibs 1 |> should equal (bigint 1)
+fibs 2 |> should equal (bigint 1)
+fibs 3 |> should equal (bigint 2)
+fibs 4 |> should equal (bigint 3)
+fibs 5 |> should equal (bigint 5)
+fibs 6 |> should equal (bigint 8)
+fibs 7 |> should equal (bigint 13)
 
 let rec fibinit = seq {
-    yield 0
-    yield 1
+    yield (bigint 0)
+    yield (bigint 1)
     yield! Seq.map2 (+) fibinit (fibinit |> Seq.skip 1)
     }
     

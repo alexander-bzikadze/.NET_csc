@@ -4,8 +4,9 @@ let fibs =
     let rec helper a b n =
         match n with
         | 0 -> b
-        | _ when n > 0 -> helper b <| a + b <| n - 1
-    helper 1 0 
+        | n when n > 0 -> helper b <| a + b <| n - 1
+        | _ -> invalidArg "n" "should be nonnegative"
+    helper (bigint 1) (bigint 0) 
     
 let rev l = 
     let rec helper l x =
@@ -16,12 +17,13 @@ let rev l =
     
 let rec mergeSort l =
     let rec merge l1 l2 acc =
-        match (l1, l2) with
-        | (a::ax, b::bx) when a < b ->  merge ax l2 <| a :: acc
-        | (a::ax, b::bx) -> merge l1 bx <| b :: acc
-        | ([], _) -> rev acc @ l2
-        | (_, []) -> rev acc @ l1 
-        | (_, _) -> rev acc
+          if (List.isEmpty l1) 
+          then (rev acc @ l2)
+          else if (List.isEmpty l2)
+          then (rev acc @ l1)
+          else if (List.head l1 < List.head l2)
+          then (merge (List.tail l1) l2 <| (List.head l1) :: acc)
+          else (merge l1 (List.tail l2) <| (List.head l2) :: acc)
     match l with
     | [] -> []
     | [a] -> [a]
@@ -44,4 +46,4 @@ let rec calc o =
     | Mult (a, b) -> calc a |> (*) <| calc b
     | Divi (a, b) -> calc a |> (/) <| calc b
     
-let primes = Seq.initInfinite id |> Seq.filter (fun x -> x > 1 && 0 = (Seq.length <| Seq.filter (fun y -> x % y = 0) [2..x-1]))
+let primes = Seq.initInfinite id |> Seq.filter (fun x -> x > 1 && 0 = (Seq.length <| Seq.filter (fun y -> x % y = 0) (seq [2..(float x |> sqrt |> int)])))
